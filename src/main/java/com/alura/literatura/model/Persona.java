@@ -2,6 +2,8 @@ package com.alura.literatura.model;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "personas")
 public class Persona {
@@ -11,17 +13,16 @@ public class Persona {
     private String nombre;
     private int anioNacimiento;
     private int anioFallecimiento;
-    @ManyToOne()
-    private Libro libro;
+    @OneToMany(mappedBy = "autor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Libro> libros;
 
     public Persona() {
     }
 
-    public Persona(DatosPersona datosPersona, Libro libro) {
+    public Persona(DatosPersona datosPersona) {
         this.nombre = datosPersona.nombre();
         this.anioNacimiento = datosPersona.anioNacimiento();
         this.anioFallecimiento = datosPersona.anioFallicimiento();
-        this.libro = libro;
     }
 
     public Long getId() {
@@ -56,18 +57,18 @@ public class Persona {
         this.anioFallecimiento = anioFallecimiento;
     }
 
-    public Libro getLibro() {
-        return libro;
+    public List<Libro> getLibros() {
+        return libros;
     }
 
-    public void setLibro(Libro libro) {
-        this.libro = libro;
+    public void setLibros(List<Libro> libros) {
+        this.libros = libros;
     }
 
     @Override
     public String toString() {
         return "Persona{" +
-                "nombre='" + nombre + '\'' +
+                ", nombre='" + nombre + '\'' +
                 ", anioNacimiento=" + anioNacimiento +
                 ", anioFallecimiento=" + anioFallecimiento +
                 '}';

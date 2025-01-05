@@ -1,5 +1,6 @@
 package com.alura.literatura.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -13,8 +14,8 @@ public class Libro {
     private Long id;
     @Column(unique = true)
     private String titulo;
-    @OneToMany(mappedBy = "libro", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Persona> autores;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Persona autor;
     private String idioma;
     private int totalDescargas;
 
@@ -23,7 +24,7 @@ public class Libro {
 
     public Libro(DatosLibro datosLibro){
         this.titulo = datosLibro.titulo();
-        this.autores = datosLibro.autores().stream().map(a -> new Persona(a, this)).collect(Collectors.toList());
+        this.autor = datosLibro.autores().stream().map(a -> new Persona(a)).collect(Collectors.toList()).get(0);
         this.idioma = datosLibro.idiomas().get(0);
         this.totalDescargas = datosLibro.totalDescargas();
     }
@@ -44,12 +45,12 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public List<Persona> getAutores() {
-        return autores;
+    public Persona getAutor() {
+        return autor;
     }
 
-    public void setAutores(List<Persona> autores) {
-        this.autores = autores;
+    public void setAutor(Persona autor) {
+        this.autor = autor;
     }
 
     public String getIdioma() {
@@ -66,5 +67,15 @@ public class Libro {
 
     public void setTotalDescargas(int totalDescargas) {
         this.totalDescargas = totalDescargas;
+    }
+
+    @Override
+    public String toString() {
+        return "Libro{" +
+                "titulo='" + titulo + '\'' +
+                ", autor=" + autor +
+                ", idioma='" + idioma + '\'' +
+                ", totalDescargas=" + totalDescargas +
+                '}';
     }
 }
